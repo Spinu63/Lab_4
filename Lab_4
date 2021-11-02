@@ -1,0 +1,56 @@
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+
+namespace ConsoleApp1
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            var filePath = @"C:\Users\Admin\RiderProjects\ConsoleApp1\ConsoleApp1\data.txt";
+            var lines = File.ReadAllLines(filePath);
+
+            Console.WriteLine(Directory.GetCurrentDirectory());
+
+            foreach (var line in lines)
+            {
+                Console.WriteLine(HasValidParentheses(line));
+            }
+        }
+
+        public static bool  HasValidParentheses(string value)
+        {
+            var map = new Dictionary<char, char>()
+            {
+                {')', '('},
+                { ']', '['}
+            };
+            
+            var stack = new Stack<char>();
+
+            for (var i = 0; i < value.Length; i++)
+            {
+                var character = value[i];
+                if (!(character == ')' || character == '(' || character == '[' || character == ']'))
+                    continue;
+                
+                if (!map.ContainsKey(value[i])) {
+                    stack.Push(value[i]);
+                }
+                else if (stack.Count != 0 && map[value[i]] == stack.Last()){
+                    stack.Pop();
+                }
+                else { 
+                    return false;
+                }
+    
+                if (stack.Count > value.Length / 2)
+                    return false;
+            }
+
+            return stack.Count == 0;
+        }
+    }
+}
